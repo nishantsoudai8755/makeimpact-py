@@ -19,6 +19,20 @@ from .types import (
     GetCustomersResponse,
     ImpactResponse,
     WhoAmIResponse,
+    BaseRecord,
+    TreePlantedRecord,
+    WasteRemovedRecord,
+    CarbonCapturedRecord,
+    MoneyDonatedRecord,
+    BaseRecordWithCustomer,
+    TreePlantedRecordWithCustomer,
+    WasteRemovedRecordWithCustomer,
+    CarbonCapturedRecordWithCustomer,
+    MoneyDonatedRecordWithCustomer,
+    ImpactRecord,
+    CustomerImpactRecord,
+    CustomerDetails,
+    ErrorResponse
 )
 from .exceptions import OneClickImpactError
 
@@ -44,4 +58,19 @@ __all__ = [
     "ImpactResponse",
     "WhoAmIResponse",
     "OneClickImpactError",
+    # Add missing record types to __all__ as well
+    "BaseRecord",
+    "TreePlantedRecord",
+    "WasteRemovedRecord",
+    "CarbonCapturedRecord",
+    "MoneyDonatedRecord",
+    "BaseRecordWithCustomer",
+    "TreePlantedRecordWithCustomer",
+    "WasteRemovedRecordWithCustomer",
+    "CarbonCapturedRecordWithCustomer",
+    "MoneyDonatedRecordWithCustomer",
+    "ImpactRecord",
+    "CustomerImpactRecord",
+    "CustomerDetails",
+    "ErrorResponse"
 ]

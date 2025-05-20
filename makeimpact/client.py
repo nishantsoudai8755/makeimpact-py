@@ -22,9 +22,19 @@ from .types import (
     WhoAmIResponse,
     Customer,
     CustomerInfo,
-    ImpactRecord,
-    CustomerImpactRecord,
     CustomerDetails,
+    BaseRecord,
+    TreePlantedRecord,
+    WasteRemovedRecord,
+    CarbonCapturedRecord,
+    MoneyDonatedRecord,
+    BaseRecordWithCustomer,
+    TreePlantedRecordWithCustomer,
+    WasteRemovedRecordWithCustomer,
+    CarbonCapturedRecordWithCustomer,
+    MoneyDonatedRecordWithCustomer,
+    ImpactRecord,
+    CustomerImpactRecord
 )
 from .exceptions import OneClickImpactError
 

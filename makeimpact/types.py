@@ -32,9 +32,9 @@ class PlantTreeParams:
 class PlantTreeResponse:
     user_id: str
     tree_planted: int
+    time_utc: str  # Moved before optional fields
     category: Optional[str] = None
     customer: Optional[Customer] = None
-    time_utc: str
 
 
 @dataclass
@@ -48,8 +48,8 @@ class CleanOceanParams:
 class CleanOceanResponse:
     user_id: str
     waste_removed: int
+    time_utc: str  # Moved before optional fields
     customer: Optional[Customer] = None
-    time_utc: str
 
 
 @dataclass
@@ -63,8 +63,8 @@ class CaptureCarbonParams:
 class CaptureCarbonResponse:
     user_id: str
     carbon_captured: int
+    time_utc: str  # Moved before optional fields
     customer: Optional[Customer] = None
-    time_utc: str
 
 
 @dataclass
@@ -78,8 +78,8 @@ class DonateMoneyParams:
 class DonateMoneyResponse:
     user_id: str
     money_donated: int
+    time_utc: str  # Moved before optional fields
     customer: Optional[Customer] = None
-    time_utc: str
 
 
 @dataclass
@@ -149,8 +149,8 @@ class GetCustomersParams:
 class CustomerDetails:
     customer_id: str
     customer_email: str
+    onboarded_on: str  # Moved before the optional field
     customer_name: Optional[str] = None
-    onboarded_on: str
 
 
 @dataclass
@@ -176,7 +176,7 @@ class WhoAmIResponse:
 
 @dataclass
 class BaseRecordWithCustomer(BaseRecord):
-    customer: Customer
+    customer: Customer  # If this doesn't have a default, it must come before any fields with defaults
 
 
 @dataclass
