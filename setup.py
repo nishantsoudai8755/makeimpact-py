@@ -5,9 +5,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="makeimpact",
-    version="1.0.0",
+    version="1.0.1",
     author="1ClickImpact",
-    author_email="info@1clickimpact.com",
+    author_email="contact@1clickimpact.com",
     description="Python SDK for 1ClickImpact API",
     long_description=long_description,
     long_description_content_type="text/markdown",
