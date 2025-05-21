@@ -25,9 +25,9 @@ from makeimpact import OneClickImpact, Environment
 sdk = OneClickImpact("your_api_key")
 
 # Create environmental impact with just a few lines of code
-sdk.plant_tree({"amount": 1})
-sdk.clean_ocean({"amount": 5})
-sdk.capture_carbon({"amount": 2})
+sdk.plant_tree(amount=1)
+sdk.clean_ocean(amount=5)
+sdk.capture_carbon(amount=2)
 ```
 
 ## 🌍 Environmental Impact Actions
@@ -37,22 +37,22 @@ sdk.capture_carbon({"amount": 2})
 Help combat deforestation and climate change by planting trees.
 
 ```python
-from makeimpact import OneClickImpact, PlantTreeParams
+from makeimpact import OneClickImpact
 
 sdk = OneClickImpact("your_api_key")
 
 # Plant a single tree
-sdk.plant_tree(PlantTreeParams(amount=1))
+sdk.plant_tree(amount=1)
 
 # Plant trees with a specific category
-sdk.plant_tree(PlantTreeParams(amount=10, category="food"))
+sdk.plant_tree(amount=10, category="food")
 
 # Plant trees with customer tracking
-sdk.plant_tree(PlantTreeParams(
+sdk.plant_tree(
     amount=5,
     customer_email="customer@example.com",
     customer_name="John Doe"
-))
+)
 ```
 
 ### 🌊 Clean Ocean Plastic
@@ -60,19 +60,19 @@ sdk.plant_tree(PlantTreeParams(
 Remove plastic waste from our oceans to protect marine life.
 
 ```python
-from makeimpact import OneClickImpact, CleanOceanParams
+from makeimpact import OneClickImpact
 
 sdk = OneClickImpact("your_api_key")
 
 # Clean 5 pounds of ocean plastic
-sdk.clean_ocean(CleanOceanParams(amount=5))
+sdk.clean_ocean(amount=5)
 
 # Clean ocean plastic with customer tracking
-sdk.clean_ocean(CleanOceanParams(
+sdk.clean_ocean(
     amount=10,
     customer_email="customer@example.com",
     customer_name="John Doe"
-))
+)
 ```
 
 ### ♻️ Capture Carbon
@@ -80,19 +80,19 @@ sdk.clean_ocean(CleanOceanParams(
 Reduce greenhouse gas emissions by capturing carbon.
 
 ```python
-from makeimpact import OneClickImpact, CaptureCarbonParams
+from makeimpact import OneClickImpact
 
 sdk = OneClickImpact("your_api_key")
 
 # Capture 2 pounds of carbon
-sdk.capture_carbon(CaptureCarbonParams(amount=2))
+sdk.capture_carbon(amount=2)
 
 # Capture carbon with customer tracking
-sdk.capture_carbon(CaptureCarbonParams(
+sdk.capture_carbon(
     amount=5,
     customer_email="customer@example.com",
     customer_name="John Doe"
-))
+)
 ```
 
 ### 💰 Donate Money
@@ -100,19 +100,19 @@ sdk.capture_carbon(CaptureCarbonParams(
 Support any cause through direct monetary donations.
 
 ```python
-from makeimpact import OneClickImpact, DonateMoneyParams
+from makeimpact import OneClickImpact
 
 sdk = OneClickImpact("your_api_key")
 
 # Donate $1.00 (amount in cents)
-sdk.donate_money(DonateMoneyParams(amount=100))
+sdk.donate_money(amount=100)
 
 # Donate with customer tracking
-sdk.donate_money(DonateMoneyParams(
+sdk.donate_money(
     amount=500,  # $5.00
     customer_email="customer@example.com",
     customer_name="John Doe"
-))
+)
 ```
 
 > **Note**: To set up a custom cause for donations, please contact 1ClickImpact directly.
@@ -125,7 +125,7 @@ sdk.donate_money(DonateMoneyParams(
 Retrieve impact records with optional filtering.
 
 ```python
-from makeimpact import OneClickImpact, GetRecordsParams
+from makeimpact import OneClickImpact
 
 sdk = OneClickImpact("your_api_key")
 
@@ -133,21 +133,19 @@ sdk = OneClickImpact("your_api_key")
 records = sdk.get_records()
 
 # Filter records by type
-tree_records = sdk.get_records(GetRecordsParams(
-    filter_by="tree_planted"
-))
+tree_records = sdk.get_records(filter_by="tree_planted")
 
 # Filter records by date range
-recent_records = sdk.get_records(GetRecordsParams(
+recent_records = sdk.get_records(
     start_date="2023-01-01",
     end_date="2023-12-31"
-))
+)
 
 # Pagination
-paginated_records = sdk.get_records(GetRecordsParams(
+paginated_records = sdk.get_records(
     cursor="cursor_from_previous_response",
     limit=10
-))
+)
 ```
 
 ### Get Customer Records
@@ -155,20 +153,20 @@ paginated_records = sdk.get_records(GetRecordsParams(
 Retrieve records for specific customers.
 
 ```python
-from makeimpact import OneClickImpact, GetCustomerRecordsParams
+from makeimpact import OneClickImpact
 
 sdk = OneClickImpact("your_api_key")
 
 # Get records for a specific customer
-customer_records = sdk.get_customer_records(GetCustomerRecordsParams(
+customer_records = sdk.get_customer_records(
     customer_email="customer@example.com"
-))
+)
 
 # Filter customer records by type
-customer_tree_records = sdk.get_customer_records(GetCustomerRecordsParams(
+customer_tree_records = sdk.get_customer_records(
     customer_email="customer@example.com",
     filter_by="tree_planted"
-))
+)
 ```
 
 ### Get Customers
@@ -176,7 +174,7 @@ customer_tree_records = sdk.get_customer_records(GetCustomerRecordsParams(
 Retrieve customer information.
 
 ```python
-from makeimpact import OneClickImpact, GetCustomersParams
+from makeimpact import OneClickImpact
 
 sdk = OneClickImpact("your_api_key")
 
@@ -184,11 +182,11 @@ sdk = OneClickImpact("your_api_key")
 customers = sdk.get_customers()
 
 # Get customers with filtering and pagination
-filtered_customers = sdk.get_customers(GetCustomersParams(
+filtered_customers = sdk.get_customers(
     customer_email="example@email.com",  # Optional: Filter by email
     limit=50,  # Optional: Limit results (1-1000)
     cursor="cursor_from_previous_response"  # Optional: For pagination
-))
+)
 ```
 
 ### Get Impact

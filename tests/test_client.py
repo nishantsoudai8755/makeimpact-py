@@ -11,12 +11,7 @@ except ImportError:
     warnings.warn("python-dotenv not installed. Cannot load .env file. Install with: pip install python-dotenv")
 
 from makeimpact import (
-    OneClickImpact, Environment, PlantTreeParams, CleanOceanParams,
-    CaptureCarbonParams, DonateMoneyParams, GetRecordsParams, GetCustomerRecordsParams,
-    GetCustomersParams,
-    TreePlantedRecord, WasteRemovedRecord, CarbonCapturedRecord, MoneyDonatedRecord,
-    TreePlantedRecordWithCustomer, WasteRemovedRecordWithCustomer, 
-    CarbonCapturedRecordWithCustomer, MoneyDonatedRecordWithCustomer
+    OneClickImpact, Environment
 )
 from makeimpact.exceptions import OneClickImpactError
 
@@ -92,7 +87,7 @@ class TestOneClickImpact:
 
         def test_plant_trees(self, sdk):
             """Should plant trees"""
-            response = sdk.plant_tree(PlantTreeParams(amount=1))
+            response = sdk.plant_tree(amount=1)
             assert response is not None
             assert response.user_id
             assert response.tree_planted == 1
@@ -102,7 +97,7 @@ class TestOneClickImpact:
 
         def test_plant_trees_with_category(self, sdk):
             """Should plant trees with category"""
-            response = sdk.plant_tree(PlantTreeParams(amount=1, category="food"))
+            response = sdk.plant_tree(amount=1, category="food")
             assert response is not None
             assert response.user_id
             assert response.tree_planted == 1
@@ -112,11 +107,11 @@ class TestOneClickImpact:
 
         def test_plant_trees_with_customer_info(self, sdk):
             """Should plant trees with customer info"""
-            response = sdk.plant_tree(PlantTreeParams(
+            response = sdk.plant_tree(
                 amount=1,
                 customer_email="test@example.com",
                 customer_name="Test User"
-            ))
+            )
             assert response is not None
             assert response.user_id
             assert response.tree_planted == 1
@@ -133,7 +128,7 @@ class TestOneClickImpact:
 
         def test_clean_ocean_waste(self, sdk):
             """Should clean ocean waste"""
-            response = sdk.clean_ocean(CleanOceanParams(amount=1))
+            response = sdk.clean_ocean(amount=1)
             assert response is not None
             assert response.user_id
             assert response.waste_removed == 1
@@ -142,11 +137,11 @@ class TestOneClickImpact:
 
         def test_clean_ocean_waste_with_customer_info(self, sdk):
             """Should clean ocean waste with customer info"""
-            response = sdk.clean_ocean(CleanOceanParams(
+            response = sdk.clean_ocean(
                 amount=1,
                 customer_email="test@example.com",
                 customer_name="Test User"
-            ))
+            )
             assert response is not None
             assert response.user_id
             assert response.waste_removed == 1
@@ -162,7 +157,7 @@ class TestOneClickImpact:
 
         def test_capture_carbon(self, sdk):
             """Should capture carbon"""
-            response = sdk.capture_carbon(CaptureCarbonParams(amount=1))
+            response = sdk.capture_carbon(amount=1)
             assert response is not None
             assert response.user_id
             assert response.carbon_captured == 1
@@ -171,11 +166,11 @@ class TestOneClickImpact:
 
         def test_capture_carbon_with_customer_info(self, sdk):
             """Should capture carbon with customer info"""
-            response = sdk.capture_carbon(CaptureCarbonParams(
+            response = sdk.capture_carbon(
                 amount=1,
                 customer_email="test@example.com",
                 customer_name="Test User"
-            ))
+            )
             assert response is not None
             assert response.user_id
             assert response.carbon_captured == 1
@@ -191,7 +186,7 @@ class TestOneClickImpact:
 
         def test_donate_money(self, sdk):
             """Should donate money"""
-            response = sdk.donate_money(DonateMoneyParams(amount=100))  # $1.00
+            response = sdk.donate_money(amount=100)  # $1.00
             assert response is not None
             assert response.user_id
             assert response.money_donated == 100
@@ -200,11 +195,11 @@ class TestOneClickImpact:
 
         def test_donate_money_with_customer_info(self, sdk):
             """Should donate money with customer info"""
-            response = sdk.donate_money(DonateMoneyParams(
+            response = sdk.donate_money(
                 amount=100,  # $1.00
                 customer_email="test@example.com",
                 customer_name="Test User"
-            ))
+            )
             assert response is not None
             assert response.user_id
             assert response.money_donated == 100
@@ -227,14 +222,39 @@ class TestOneClickImpact:
 
         def test_get_records_with_filters(self, sdk):
             """Should get records with filters"""
-            response = sdk.get_records(GetRecordsParams(
+            response = sdk.get_records(
                 filter_by="tree_planted",
                 limit=5
-            ))
+            )
             assert response is not None
             assert hasattr(response, "user_records")
             assert isinstance(response.user_records, list)
             assert len(response.user_records) <= 5
+
+        def test_get_records_with_pagination(self, sdk):
+            """Should get records with pagination"""
+            # Get first page with just one record
+            first_page = sdk.get_records(limit=1)
+            assert first_page is not None
+            assert hasattr(first_page, "user_records")
+            assert isinstance(first_page.user_records, list)
+            assert len(first_page.user_records) <= 1
+            
+            # Check if there are more records (cursor exists)
+            if first_page.cursor:
+                # Use the cursor to get the next page
+                second_page = sdk.get_records(
+                    limit=1,
+                    cursor=first_page.cursor
+                )
+                assert second_page is not None
+                assert hasattr(second_page, "user_records")
+                assert isinstance(second_page.user_records, list)
+                
+                # If we have records in both pages, they should be different
+                if first_page.user_records and second_page.user_records:
+                    # Check if records are different by comparing time_utc
+                    assert first_page.user_records[0].time_utc != second_page.user_records[0].time_utc
 
     class TestGetCustomerRecords:
         """Tests for getCustomerRecords method"""
@@ -242,15 +262,15 @@ class TestOneClickImpact:
         def test_get_customer_records(self, sdk):
             """Should get customer records"""
             # First create a record with a customer
-            sdk.plant_tree(PlantTreeParams(
+            sdk.plant_tree(
                 amount=1,
                 customer_email="test_customer@example.com",
                 customer_name="Test Customer"
-            ))
+            )
 
-            response = sdk.get_customer_records(GetCustomerRecordsParams(
+            response = sdk.get_customer_records(
                 customer_email="test_customer@example.com"
-            ))
+            )
             assert response is not None
             assert hasattr(response, "customer_records")
             assert isinstance(response.customer_records, list)
@@ -268,15 +288,15 @@ class TestOneClickImpact:
         def test_get_customer_by_email(self, sdk):
             """Should get customer by email"""
             # Create a customer first
-            sdk.plant_tree(PlantTreeParams(
+            sdk.plant_tree(
                 amount=1,
                 customer_email="filtered_customer@example.com",
                 customer_name="Filtered Customer"
-            ))
+            )
 
-            response = sdk.get_customers(GetCustomersParams(
+            response = sdk.get_customers(
                 customer_email="filtered_customer@example.com"
-            ))
+            )
             assert response is not None
             assert hasattr(response, "customers")
             assert isinstance(response.customers, list)

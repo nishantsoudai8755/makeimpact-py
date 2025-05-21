@@ -88,6 +88,17 @@ python3 -m pytest tests/ -v
 python3 -m pytest --cov=makeimpact tests/
 ```
 
+## API Usage
+
+The SDK uses a simple and intuitive keyword argument approach:
+
+```python
+# Simple API with direct keyword arguments
+sdk.plant_tree(amount=1, category="reforestation")
+sdk.get_records(filter_by="tree_planted", limit=10)
+sdk.get_customer_records(customer_email="example@email.com")
+```
+
 ## Notes
 
 - Tests communicate with the 1ClickImpact sandbox API, so an internet connection is required.

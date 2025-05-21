@@ -1,16 +1,9 @@
 import json
-from typing import Dict, Any, Optional, Union, List
+from typing import Dict, Any, Optional, List
 import requests
 
 from .types import (
     Environment,
-    PlantTreeParams,
-    CleanOceanParams,
-    CaptureCarbonParams,
-    DonateMoneyParams,
-    GetRecordsParams,
-    GetCustomerRecordsParams,
-    GetCustomersParams,
     PlantTreeResponse,
     CleanOceanResponse,
     CaptureCarbonResponse,
@@ -23,18 +16,14 @@ from .types import (
     Customer,
     CustomerInfo,
     CustomerDetails,
-    BaseRecord,
     TreePlantedRecord,
     WasteRemovedRecord,
     CarbonCapturedRecord,
     MoneyDonatedRecord,
-    BaseRecordWithCustomer,
     TreePlantedRecordWithCustomer,
     WasteRemovedRecordWithCustomer,
     CarbonCapturedRecordWithCustomer,
-    MoneyDonatedRecordWithCustomer,
-    ImpactRecord,
-    CustomerImpactRecord
+    MoneyDonatedRecordWithCustomer
 )
 from .exceptions import OneClickImpactError
 
@@ -64,28 +53,31 @@ class OneClickImpact:
             else "https://api.1clickimpact.com"
         )
 
-    def plant_tree(self, params: PlantTreeParams) -> PlantTreeResponse:
+    def plant_tree(self, 
+                  amount: int, 
+                  category: Optional[str] = None, 
+                  customer_email: Optional[str] = None, 
+                  customer_name: Optional[str] = None) -> PlantTreeResponse:
         """
         Plant trees through 1ClickImpact
         
         Args:
-            params: Configuration for planting trees
-                amount: Number of trees to plant (1-10,000,000)
-                category: Optional: Category for the tree planting
-                customer_email: Optional: Customer's email
-                customer_name: Optional: Customer's name (only used if email is provided)
+            amount: Number of trees to plant (1-10,000,000)
+            category: Optional: Category for the tree planting
+            customer_email: Optional: Customer's email
+            customer_name: Optional: Customer's name (only used if email is provided)
                 
         Returns:
             PlantTreeResponse: Response containing details about the planted trees
         """
-        body = {"amount": params.amount}
+        body = {"amount": amount}
         
-        if params.category:
-            body["category"] = params.category
-        if params.customer_email:
-            body["customer_email"] = params.customer_email
-            if params.customer_name:
-                body["customer_name"] = params.customer_name
+        if category:
+            body["category"] = category
+        if customer_email:
+            body["customer_email"] = customer_email
+            if customer_name:
+                body["customer_name"] = customer_name
                 
         response = self._make_request("/v1/plant_tree", body)
         
@@ -98,25 +90,27 @@ class OneClickImpact:
             time_utc=response["time_utc"],
         )
 
-    def clean_ocean(self, params: CleanOceanParams) -> CleanOceanResponse:
+    def clean_ocean(self,
+                   amount: int,
+                   customer_email: Optional[str] = None,
+                   customer_name: Optional[str] = None) -> CleanOceanResponse:
         """
         Clean ocean plastic through 1ClickImpact
         
         Args:
-            params: Configuration for cleaning ocean plastic
-                amount: Amount of waste to clean in pounds (lbs) (1-10,000,000)
-                customer_email: Optional: Customer's email
-                customer_name: Optional: Customer's name (only used if email is provided)
+            amount: Amount of waste to clean in pounds (lbs) (1-10,000,000)
+            customer_email: Optional: Customer's email
+            customer_name: Optional: Customer's name (only used if email is provided)
                 
         Returns:
             CleanOceanResponse: Response containing details about the waste removed
         """
-        body = {"amount": params.amount}
+        body = {"amount": amount}
         
-        if params.customer_email:
-            body["customer_email"] = params.customer_email
-            if params.customer_name:
-                body["customer_name"] = params.customer_name
+        if customer_email:
+            body["customer_email"] = customer_email
+            if customer_name:
+                body["customer_name"] = customer_name
                 
         response = self._make_request("/v1/clean_ocean", body)
         
@@ -128,25 +122,27 @@ class OneClickImpact:
             time_utc=response["time_utc"],
         )
 
-    def capture_carbon(self, params: CaptureCarbonParams) -> CaptureCarbonResponse:
+    def capture_carbon(self,
+                      amount: int,
+                      customer_email: Optional[str] = None,
+                      customer_name: Optional[str] = None) -> CaptureCarbonResponse:
         """
         Capture carbon through 1ClickImpact
         
         Args:
-            params: Configuration for capturing carbon
-                amount: Amount of carbon to capture in pounds (lbs) (1-10,000,000)
-                customer_email: Optional: Customer's email
-                customer_name: Optional: Customer's name (only used if email is provided)
+            amount: Amount of carbon to capture in pounds (lbs) (1-10,000,000)
+            customer_email: Optional: Customer's email
+            customer_name: Optional: Customer's name (only used if email is provided)
                 
         Returns:
             CaptureCarbonResponse: Response containing details about the carbon captured
         """
-        body = {"amount": params.amount}
+        body = {"amount": amount}
         
-        if params.customer_email:
-            body["customer_email"] = params.customer_email
-            if params.customer_name:
-                body["customer_name"] = params.customer_name
+        if customer_email:
+            body["customer_email"] = customer_email
+            if customer_name:
+                body["customer_name"] = customer_name
                 
         response = self._make_request("/v1/capture_carbon", body)
         
@@ -158,25 +154,27 @@ class OneClickImpact:
             time_utc=response["time_utc"],
         )
 
-    def donate_money(self, params: DonateMoneyParams) -> DonateMoneyResponse:
+    def donate_money(self,
+                    amount: int,
+                    customer_email: Optional[str] = None,
+                    customer_name: Optional[str] = None) -> DonateMoneyResponse:
         """
         Donate money through 1ClickImpact
         
         Args:
-            params: Configuration for donating money
-                amount: Amount in smallest USD units (cents). For example, $1 = 100, $0.10 = 10 (1-1,000,000,000)
-                customer_email: Optional: Customer's email
-                customer_name: Optional: Customer's name (only used if email is provided)
+            amount: Amount in smallest USD units (cents). For example, $1 = 100, $0.10 = 10 (1-1,000,000,000)
+            customer_email: Optional: Customer's email
+            customer_name: Optional: Customer's name (only used if email is provided)
                 
         Returns:
             DonateMoneyResponse: Response containing details about the money donated
         """
-        body = {"amount": params.amount}
+        body = {"amount": amount}
         
-        if params.customer_email:
-            body["customer_email"] = params.customer_email
-            if params.customer_name:
-                body["customer_name"] = params.customer_name
+        if customer_email:
+            body["customer_email"] = customer_email
+            if customer_name:
+                body["customer_name"] = customer_name
                 
         response = self._make_request("/v1/donate_money", body)
         
@@ -219,36 +217,37 @@ class OneClickImpact:
             email=response["email"],
         )
 
-    def get_records(self, params: Optional[GetRecordsParams] = None) -> GetRecordsResponse:
+    def get_records(self,
+                   filter_by: Optional[str] = None,
+                   start_date: Optional[str] = None,
+                   end_date: Optional[str] = None,
+                   cursor: Optional[str] = None,
+                   limit: Optional[int] = None) -> GetRecordsResponse:
         """
         Get impact records
         
         Args:
-            params: Optional parameters to filter records
-                filter_by: Optional: Filter records by type. The value could be either 
-                          "tree_planted", "waste_removed", "carbon_captured", or "money_donated".
-                start_date: Optional: Filter records created on or after this date (format: YYYY-MM-DD)
-                end_date: Optional: Filter records created on or before this date (format: YYYY-MM-DD)
-                cursor: Optional: Pagination cursor from previous response for fetching next page
-                limit: Optional: Maximum number of records to return (1-1000, default: 10)
+            filter_by: Optional: Filter records by type. The value could be either 
+                      "tree_planted", "waste_removed", "carbon_captured", or "money_donated".
+            start_date: Optional: Filter records created on or after this date (format: YYYY-MM-DD)
+            end_date: Optional: Filter records created on or before this date (format: YYYY-MM-DD)
+            cursor: Optional: Pagination cursor from previous response for fetching next page
+            limit: Optional: Maximum number of records to return (1-1000, default: 10)
                 
         Returns:
             GetRecordsResponse: Records based on the provided filters
         """
-        if params is None:
-            params = GetRecordsParams()
-            
         query_params = {}
-        if params.filter_by:
-            query_params["filter_by"] = params.filter_by
-        if params.start_date:
-            query_params["start_date"] = params.start_date
-        if params.end_date:
-            query_params["end_date"] = params.end_date
-        if params.cursor:
-            query_params["cursor"] = params.cursor
-        if params.limit is not None:
-            query_params["limit"] = params.limit
+        if filter_by:
+            query_params["filter_by"] = filter_by
+        if start_date:
+            query_params["start_date"] = start_date
+        if end_date:
+            query_params["end_date"] = end_date
+        if cursor:
+            query_params["cursor"] = cursor
+        if limit is not None:
+            query_params["limit"] = limit
             
         endpoint = "/v1/records"
         response = self._make_request(endpoint, None, "GET", query_params)
@@ -288,39 +287,41 @@ class OneClickImpact:
             cursor=response.get("cursor"),
         )
 
-    def get_customer_records(self, params: Optional[GetCustomerRecordsParams] = None) -> GetCustomerRecordsResponse:
+    def get_customer_records(self,
+                            customer_email: Optional[str] = None,
+                            filter_by: Optional[str] = None,
+                            start_date: Optional[str] = None,
+                            end_date: Optional[str] = None,
+                            cursor: Optional[str] = None,
+                            limit: Optional[int] = None) -> GetCustomerRecordsResponse:
         """
         Get customer records
         
         Args:
-            params: Optional parameters to filter customer records
-                customer_email: Optional: Filter records by customer email
-                filter_by: Optional: Filter records by type. The value could be either 
-                          "tree_planted", "waste_removed", "carbon_captured", or "money_donated".
-                start_date: Optional: Filter records created on or after this date (format: YYYY-MM-DD)
-                end_date: Optional: Filter records created on or before this date (format: YYYY-MM-DD)
-                cursor: Optional: Pagination cursor from previous response for fetching next page
-                limit: Optional: Maximum number of records to return (1-1000, default: 10)
+            customer_email: Optional: Filter records by customer email
+            filter_by: Optional: Filter records by type. The value could be either 
+                      "tree_planted", "waste_removed", "carbon_captured", or "money_donated".
+            start_date: Optional: Filter records created on or after this date (format: YYYY-MM-DD)
+            end_date: Optional: Filter records created on or before this date (format: YYYY-MM-DD)
+            cursor: Optional: Pagination cursor from previous response for fetching next page
+            limit: Optional: Maximum number of records to return (1-1000, default: 10)
                 
         Returns:
             GetCustomerRecordsResponse: Customer records based on the provided filters
         """
-        if params is None:
-            params = GetCustomerRecordsParams()
-            
         query_params = {}
-        if params.customer_email:
-            query_params["customer_email"] = params.customer_email
-        if params.filter_by:
-            query_params["filter_by"] = params.filter_by
-        if params.start_date:
-            query_params["start_date"] = params.start_date
-        if params.end_date:
-            query_params["end_date"] = params.end_date
-        if params.cursor:
-            query_params["cursor"] = params.cursor
-        if params.limit is not None:
-            query_params["limit"] = params.limit
+        if customer_email:
+            query_params["customer_email"] = customer_email
+        if filter_by:
+            query_params["filter_by"] = filter_by
+        if start_date:
+            query_params["start_date"] = start_date
+        if end_date:
+            query_params["end_date"] = end_date
+        if cursor:
+            query_params["cursor"] = cursor
+        if limit is not None:
+            query_params["limit"] = limit
             
         endpoint = "/v1/customer_records"
         response = self._make_request(endpoint, None, "GET", query_params)
@@ -361,29 +362,28 @@ class OneClickImpact:
             cursor=response.get("cursor"),
         )
 
-    def get_customers(self, params: Optional[GetCustomersParams] = None) -> GetCustomersResponse:
+    def get_customers(self,
+                     customer_email: Optional[str] = None,
+                     limit: Optional[int] = None,
+                     cursor: Optional[str] = None) -> GetCustomersResponse:
         """
         Get customers
         
         Args:
-            params: Optional parameters to filter customers
-                customer_email: Optional: Filter customers by email
-                limit: Optional: Maximum number of customers to return (1-1000, default: 10)
-                cursor: Optional: Pagination cursor from previous response for fetching next page
+            customer_email: Optional: Filter customers by email
+            limit: Optional: Maximum number of customers to return (1-1000, default: 10)
+            cursor: Optional: Pagination cursor from previous response for fetching next page
                 
         Returns:
             GetCustomersResponse: Customers based on the provided filters
         """
-        if params is None:
-            params = GetCustomersParams()
-            
         query_params = {}
-        if params.customer_email:
-            query_params["customer_email"] = params.customer_email
-        if params.limit is not None:
-            query_params["limit"] = params.limit
-        if params.cursor:
-            query_params["cursor"] = params.cursor
+        if customer_email:
+            query_params["customer_email"] = customer_email
+        if limit is not None:
+            query_params["limit"] = limit
+        if cursor:
+            query_params["cursor"] = cursor
             
         endpoint = "/v1/customers"
         response = self._make_request(endpoint, None, "GET", query_params)
